@@ -31,9 +31,9 @@ common:
   # ASG Variables
 #  CS_ASG_NAME: &CS_ASG_NAME "tops-catalog-servicev0-ltest-asg"
   API_ASG_NAME: &API_ASG_NAME "test-asg-1"
-  MIN_SIZE: &MIN_SIZE "5"
-  MAX_SIZE: &MAX_SIZE "5"
-  DESIRED_CAPACITY: &DESIRED_CAPACITY "3"
+  MIN_SIZE: &MIN_SIZE "2"
+  MAX_SIZE: &MAX_SIZE "9"
+  DESIRED_CAPACITY: &DESIRED_CAPACITY "6"
 
   # RDS and Redis Variable
 #  RDS_ID: &RDS_ID "tops-ltest-database-30may2022"
