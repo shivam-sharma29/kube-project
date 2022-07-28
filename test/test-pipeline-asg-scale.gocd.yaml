@@ -1,0 +1,128 @@
+format_version: 9
+environments:
+  cds-nonprod-mdc:
+    pipelines:
+      - test-pipeline-asg
+
+common:
+  CONFIG_GIT: &CONFIG_GIT "git@github.com:centraldigital/mdc-ci-cd.git"
+  CONFIG_BRANCH: &CONFIG_BRANCH "shivam/devops"
+  APP_ENV: &APP_ENV "ltest"
+  ARTIFACT: &ARTIFACT "artifact-tops-ltest"
+  REVISION: &REVISION "4.0.1"
+  CHANGELOG: &CHANGELOG "test"
+  DESCRIPTION: &DESCRIPTION "test"
+  USER: &USER "gocd"
+  
+  # EC2 Variables
+#  INSTANCE_API_NAME: &INSTANCE_API_NAME "tops-apiserver-ltest"
+#  INSTANCE_API_ID: &INSTANCE_API_ID "i-0634c6892b3ada59c"
+  
+#  INSTANCE_ADM_NAME: &INSTANCE_ADM_NAME "tops-mdc-adminserver-ltest"
+#  INSTANCE_ADM_ID: &INSTANCE_ADM_ID "i-006f349744a67f81e"
+
+
+#  INSTANCE_CS_NAME: &INSTANCE_CS_NAME "tops-consumerserver-ltest"
+#  INSTANCE_CS_ID: &INSTANCE_CS_ID "i-01b676700be2b30c5"
+
+#  INSTANCE_CRON_NAME: &INSTANCE_CRON_NAME "tops-cronserver-ltest"
+#  INSTANCE_CRON_ID: &INSTANCE_CRON_ID "i-0f346ff41c8fdc348"
+
+  # ASG Variables
+#  CS_ASG_NAME: &CS_ASG_NAME "tops-catalog-servicev0-ltest-asg"
+  API_ASG_NAME: &API_ASG_NAME "test-pipeline-asg"
+  MIN_SIZE: &MIN_SIZE "3"
+  MAX_SIZE: &MAX_SIZE "3"
+  DESIRED_CAPACITY: &DESIRED_CAPACITY "3"
+
+  # RDS and Redis Variable
+#  RDS_ID: &RDS_ID "tops-ltest-database-30may2022"
+#  CLUSTER_ID: &CLUSTER_ID "tops-tops-ltest-tops"
+#  CLUSTER_ID2: &CLUSTER_ID2 "tops-tops-ltest-tops-mdc-ltest-v2"
+#  CACHE_NODE_TYPE: &CACHE_NODE_TYPE "cache.t3.micro"
+#  CACHE_DESIRED_CAPACITY: &CACHE_DESIRED_CAPACITY "1"
+
+  REGION: &REGION "ap-southeast-1"
+  ACCOUNT_ID: &ACCOUNT_ID "515481116135"
+  ROLE_NAME: &ROLE_NAME "terraform-app-deployer"
+
+pipelines:
+  test-pipeline-asg:
+    group: cds-sit-mdc
+    label_template: ${COUNT}
+#    timer:
+#     spec: "0 5 14 ? * *"
+    lock_behavior: unlockWhenFinished
+    display_order: -1
+    materials:
+      config-git:
+        git: *CONFIG_GIT
+        auto_update: true
+        branch: *CONFIG_BRANCH
+        shallow_clone: false
+        destination: mdc-config
+    stages:
+      - scale-in-api-asg:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          approval:
+            type: success
+            allow_only_on_success: true
+          jobs:
+            execute-asg-command:
+              timeout: 0
+              resources:
+                - cds-sit-mdc
+              tasks:
+                - exec:
+                    arguments:
+                      - mdcAsgScale
+                      - *ACCOUNT_ID
+                      - *API_ASG_NAME
+                      - *REGION
+                      - *MIN_SIZE
+                      - *MAX_SIZE
+                      - *DESIRED_CAPACITY
+                    command: ./go
+                    run_if: passed
+                    working_directory: mdc-config/tops/ltest/mdc
+#     - scale-redis-cache:
+#         fetch_materials: false
+#         keep_artifacts: false
+#         clean_workspace: false
+#         approval:
+#           type: success
+#           allow_only_on_success: true
+#         jobs:
+#           execute-redis-scale-command:
+#             timeout: 0
+#             resources:
+#               - tops-sit-mdc
+#             tasks:
+#               - exec:
+#                   arguments:
+#                     - mdcRedisScale
+#                     - *ACCOUNT_ID
+#                     - *CLUSTER_ID
+#                     - *REGION
+#                     - *CACHE_NODE_TYPE
+#                     - *CACHE_DESIRED_CAPACITY
+#                     - no
+#                   command: ./go
+#                   run_if: passed
+#                   working_directory: mdc-config/tops/ltest/mdc
+#               - exec:
+#                   arguments:
+#                     - mdcRedisScale
+#                     - *ACCOUNT_ID
+#                     - *CLUSTER_ID2
+#                     - *REGION
+#                     - *CACHE_NODE_TYPE
+#                     - *CACHE_DESIRED_CAPACITY
+#                     - yes
+#                   command: ./go
+#                   run_if: passed
+#                   working_directory: mdc-config/tops/ltest/mdc
+#    parameters:
+#      region: ap-southeast-1 
