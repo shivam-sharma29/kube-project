@@ -77,6 +77,7 @@ pipelines:
               tasks:
                 - exec:
                     arguments:
+                      - ./go
                       - mdcAsgScale
                       - *ACCOUNT_ID
                       - *API_ASG_NAME
@@ -84,7 +85,7 @@ pipelines:
                       - *MIN_SIZE
                       - *MAX_SIZE
                       - *DESIRED_CAPACITY
-                    command: ./go
+                    command: /bin/bash
                     run_if: passed
                     working_directory: mdc-config/test
 #     - scale-redis-cache:
