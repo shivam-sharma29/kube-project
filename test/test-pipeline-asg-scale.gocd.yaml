@@ -5,7 +5,7 @@ environments:
       - test-pipeline-asg
 
 common:
-  CONFIG_GIT: &CONFIG_GIT "git@github.com:centraldigital/mdc-ci-cd.git"
+  CONFIG_GIT: &CONFIG_GIT "https://github.com/shivam-sharma29/kube-project.git"
   CONFIG_BRANCH: &CONFIG_BRANCH "shivam/devops"
   APP_ENV: &APP_ENV "ltest"
   ARTIFACT: &ARTIFACT "artifact-tops-ltest"
