@@ -6,7 +6,7 @@ environments:
 
 common:
   CONFIG_GIT: &CONFIG_GIT "https://github.com/shivam-sharma29/kube-project.git"
-  CONFIG_BRANCH: &CONFIG_BRANCH "shivam/devops"
+  CONFIG_BRANCH: &CONFIG_BRANCH "shivam123"
   APP_ENV: &APP_ENV "ltest"
   ARTIFACT: &ARTIFACT "artifact-tops-ltest"
   REVISION: &REVISION "4.0.1"
@@ -42,8 +42,8 @@ common:
 #  CACHE_NODE_TYPE: &CACHE_NODE_TYPE "cache.t3.micro"
 #  CACHE_DESIRED_CAPACITY: &CACHE_DESIRED_CAPACITY "1"
 
-  REGION: &REGION "ap-southeast-1"
-  ACCOUNT_ID: &ACCOUNT_ID "515481116135"
+  REGION: &REGION "us-east-1"
+  ACCOUNT_ID: &ACCOUNT_ID "724664277791"
   ROLE_NAME: &ROLE_NAME "terraform-app-deployer"
 
 pipelines:
@@ -86,7 +86,7 @@ pipelines:
                       - *DESIRED_CAPACITY
                     command: ./go
                     run_if: passed
-                    working_directory: mdc-config/tops/ltest/mdc
+                    working_directory: mdc-config/test
 #     - scale-redis-cache:
 #         fetch_materials: false
 #         keep_artifacts: false
